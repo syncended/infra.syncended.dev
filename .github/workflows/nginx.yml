@@ -26,3 +26,6 @@ jobs:
           file: ./nginx/Dockerfile
           push: true
           tags: "${{ secrets.DOCKER_REGISTRY }}/nginx:latest"
+          build-args: |
+            "SSL_CRT=${{ secrets.SSL_CRT }}"
+            "SSL_KEY=${{ secrets.SSL_KEY }}"
