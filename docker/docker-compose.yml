@@ -1,0 +1,24 @@
+services:
+  kube-website:
+    image: ${registry}/kube-website:latest
+    container_name: kube-website
+    restart: always
+  nginx:
+    image: ${registry}/nginx:latest
+    container_name: nginx
+    restart: always
+    depends_on:
+      - kube-website
+    ports:
+      - "80:80"
+      - "443:443"
+  watchtower:
+    restart: always
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    environment:
+      WATCHTOWER_POLL_INTERVAL: 300
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/.docker/config.json:/config.json
+    command: kube-website nginx watchtower --cleanup
